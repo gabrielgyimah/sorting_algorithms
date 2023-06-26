@@ -1,49 +1,64 @@
 #include "sort.h"
 
 /**
- * insertion_sort_list - sorts a doubly linked list using the
- * insertion method in scending order
- * 
- * @list: Linked list to be sorted
- *
- * Return: Nothing!
- */
-
+  * insertion_sort_list - sorts a doubly linked list of integers
+  * @list: double pointer to linked list.
+  *
+  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *tmp, *h;
+	listint_t *head, *prev;
 
-	if (!list || !(*list))
+	if (*list == NULL || list == NULL || (*list)->next == NULL)
+	{
+		return;
+	}
+
+	head = *list;
+
+	while (head)
+	{
+		prev = head->prev;
+
+		while (prev && prev->n > head->n)
+		{
+			swap(prev, head, list);
+			print_list(*list);
+			prev = head->prev;
+		}
+
+		head = head->next;
+	}
+}
+
+/**
+  * swap - swap two nodes of a list.
+  * @nodeA: node to be swapped.
+  * @nodeB: node to be swapped.
+  * @list: double pointer to list.
+  *
+  */
+void swap(listint_t *nodeA, listint_t *nodeB, listint_t **list)
+{
+	listint_t *temp1, *temp2;
+
+	if (nodeA == NULL || nodeB == NULL)
 		return;
 
-	h = (*list)->next;
+	temp1 = nodeA->prev;
+	temp2 = nodeB->next;
 
-	while (h)
-	{
-		tmp = h;
-		while (tmp != *list && tmp->prev && (tmp->n < tmp->prev->n))
-		{
-			listint_t *curr, *prev, *next;
+	if (temp1)
+		temp1->next = nodeB;
 
-			curr = tmp;
-			next = tmp->next;
-			prev = tmp->prev;
+	if (temp2)
+		temp2->prev = nodeA;
 
-			curr->next = prev;
-			curr->prev = prev->prev;
+	nodeA->next = temp2;
+	nodeA->prev = nodeB;
+	nodeB->next = nodeA;
+	nodeB->prev = temp1;
 
-			if (prev->prev)
-				prev->prev->next = curr;
-
-			prev->prev = curr;
-			prev->next = next;
-			if (next)
-				next->prev = prev;
-			if (prev == *list)
-				*list = prev->prev;
-			print_list(*list);
-			tmp = prev->prev;
-		}
-		h = h->next;
-	}
+	if (temp1 == NULL)
+		*list = nodeB;
 }

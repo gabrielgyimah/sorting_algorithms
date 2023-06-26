@@ -1,67 +1,65 @@
 #include "sort.h"
 
 /**
- * quick_sort - sort an array using quick sort algorithm
- * @arr: array to be sorted
- * @size: length of the array
- * Return: Nothing
- */
-
-void quick_sort(int *arr, size_t size)
+  * quick_sort - sorts an array of integers in ascending order.
+  * @array: array to be sorted.
+  * @size: size of the array.
+  *
+  *
+  */
+void quick_sort(int *array, size_t size)
 {
-	if (!arr)
-		return;
-	qs(arr, 0, size - 1, size);
+
+	lomuto_qsort(array, 0, size - 1, size);
 }
 
+/**
+  * lomuto_qsort - sort an array of integers
+  * @array: array to be sorted.
+  * @lo: first element in array.
+  * @hi: last element in array.
+  * @size: size of the array.
+  *
+  */
+void lomuto_qsort(int *array, int lo, int hi, size_t size)
+{
+	int p = 0;
+
+	if (lo < hi)
+	{
+		p = partition(array, lo, hi, size);
+		lomuto_qsort(array, lo, p - 1, size);
+		lomuto_qsort(array, p + 1, hi, size);
+	}
+}
 
 /**
- * prtn - partition the array
- * @arr: array to be partition
- * @lo: the lower bond
- * @hi: the upper bond
- * @size: length of the array
- * Return: index of the pivot
- */
-
-int prtn(int *arr, int lo, int hi, int size)
+  * partition - divide the array into into.
+  * @array: array to be partition.
+  * @lo: first element of the array.
+  * @hi: last element in the array.
+  * @size: size of the array.
+  *
+  * Return: the index of the array from where the check should begin.
+  */
+int partition(int *array, int lo, int hi, size_t size)
 {
-	int pvt = arr[hi], tmp;
-	int idx = lo - 1;
-	int i;
+	int pivot = array[hi];
+	int i = lo - 1, j, tmp;
 
-	for (i = lo; i <= hi; i++)
+	for (j = lo; j <= hi; j++)
 	{
-		if (arr[i] <= pvt && i != ++idx)
+		if (array[j]  <= pivot)
 		{
-			tmp = arr[i];
-			arr[i] = arr[idx];
-			arr[idx] = tmp;
-			print_array(arr, size);
-
+			i++;
+			if (i != j)
+			{
+				tmp = array[i];
+				array[i] = array[j];
+				array[j] = tmp;
+				print_array(array, size);
+			}
 		}
 	}
-	return (idx);
-}
-
-
-/**
- * qs - do the recursive call
- * @arr: array to be sorted
- * @lo: the lower bond
- * @hi: the upper bond
- * @size: length of the arr
- * Return: Nothing
- */
-void qs(int *arr, int lo, int hi, int size)
-{
-	int pidx;
-
-	if (lo >= hi)
-		return;
-
-	pidx = prtn(arr, lo, hi, size);
-
-	qs(arr, lo, pidx - 1, size);
-	qs(arr, pidx + 1, hi, size);
+	return (i);
 }
