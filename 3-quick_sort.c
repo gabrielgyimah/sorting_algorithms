@@ -1,127 +1,67 @@
 #include "sort.h"
 
-void print_my_array(char *s, const int *array, size_t low, size_t high);
-void merge_conquer(int *array, size_t low,
-                   size_t middle, size_t high, int *new_array);
-void merge_divide(int *array, size_t low, size_t high, int *new_array);
-
 /**
- * print_my_array - Prints an array of integers within constrained indexes
- *
- * @s: String appended
- * @array: The array to be printed
- * @low: lower boundary
- * @high: upper boundary
- *
- * Return: Void
+ * quick_sort - sort an array using quick sort algorithm
+ * @arr: array to be sorted
+ * @size: length of the array
+ * Return: Nothing
  */
 
-void print_my_array(char *s, const int *array, size_t low, size_t high)
+void quick_sort(int *arr, size_t size)
 {
-        size_t i;
-
-        printf("[%s]: ", s);
-        i = low;
-        while (array && i <= high)
-        {
-                if (i > low)
-                        printf(", ");
-                printf("%d", array[i]);
-                ++i;
-        }
-        printf("\n");
+	if (!arr)
+		return;
+	qs(arr, 0, size - 1, size);
 }
 
+
 /**
- * merge_divide - implements merge sort
- * divides and conquer technique
- *
- * @array: given array
- * @low: lower boundary
- * @high: upper boundary
- * @new_array: new_array array
- *
- * Return: Void
+ * prtn - partition the array
+ * @arr: array to be partition
+ * @lo: the lower bond
+ * @hi: the upper bond
+ * @size: length of the array
+ * Return: index of the pivot
  */
 
-void merge_divide(int *array, size_t low, size_t high, int *new_array)
+int prtn(int *arr, int lo, int hi, int size)
 {
-        size_t middle;
+	int pvt = arr[hi], tmp;
+	int idx = lo - 1;
+	int i;
 
-        if (low >= high)
-                return;
+	for (i = lo; i <= hi; i++)
+	{
+		if (arr[i] <= pvt && i != ++idx)
+		{
+			tmp = arr[i];
+			arr[i] = arr[idx];
+			arr[idx] = tmp;
+			print_array(arr, size);
 
-        middle = (high + low - 1) / 2;
-
-        merge_divide(array, low, middle, new_array);
-        merge_divide(array, middle + 1, high, new_array);
-        merge_conquer(array, low, middle, high, new_array);
+		}
+	}
+	return (idx);
 }
 
-/**
- * merge_conquer - merges two sub arrays
- *
- * @array: given array
- * @low: lower boundary
- * @middle: lower exclusive separator
- * @high: upper boundary
- * @new_array: new_array array
- *
- * Return: Void
- */
-
-void merge_conquer(int *array, size_t low,
-                   size_t middle, size_t high, int *new_array)
-{
-        size_t first, second, third, i;
-
-        printf("Merging...\n");
-        print_my_array("left", array, low, middle);
-        print_my_array("right", array, middle + 1, high);
-
-        first = third = low;
-        second = middle + 1;
-        while (first <= middle && second <= high)
-        {
-                if (array[first] <= array[second])
-                        new_array[third++] = array[first++];
-                else
-                        new_array[third++] = array[second++];
-        }
-
-        while (first <= middle)
-                new_array[third++] = array[first++];
-
-        while (second <= high)
-                new_array[third++] = array[second++];
-
-        for (i = low; i <= high; i++)
-                array[i] = new_array[i];
-
-        print_my_array("Done", new_array, low, high);
-}
 
 /**
- * merge_sort - sorts an array of integers in
- * ascending order using the Merge sort algorithm
- *
- * @array: given array
- * @size: size of array
- *
- * Return: Void
+ * qs - do the recursive call
+ * @arr: array to be sorted
+ * @lo: the lower bond
+ * @hi: the upper bond
+ * @size: length of the arr
+ * Return: Nothing
  */
-
-void merge_sort(int *array, size_t size)
+void qs(int *arr, int lo, int hi, int size)
 {
-        int *new_array;
+	int pidx;
 
-        if (!array || size < 2)
-                return;
+	if (lo >= hi)
+		return;
 
-        new_array = malloc(sizeof(int) * size);
-        if (!new_array)
-                return;
+	pidx = prtn(arr, lo, hi, size);
 
-        merge_divide(array, 0, size - 1, new_array);
-        free(new_array);
+	qs(arr, lo, pidx - 1, size);
+	qs(arr, pidx + 1, hi, size);
 }
