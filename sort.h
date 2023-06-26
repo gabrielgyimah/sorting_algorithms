@@ -24,10 +24,5 @@ void print_list(const listint_t *list);
 void insertion_sort_list(listint_t **list);
 void selection_sort(int *array, size_t size);
 void quick_sort(int *array, size_t size);
-void print_my_array(char *s, const int *array, size_t low, size_t high);
-void merge_conquer(int *array, size_t low,
-		   size_t middle, size_t high, int *new_array);
-void merge_divide(int *array, size_t low, size_t high, int *new_array);
-void print_my_array(char *s, const int *array, size_t low, size_t high);
 
 #endif
